@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
+    const string menuHint = "you can write menu at any time";
+    string[] level1Passwords = {"books", "aisle", "shelf", "password", "font", "borrow"};
+    string[] level2Passwords = { "gun", "cheif", "law", "badge", "enforcement", "cop" };
+    string[] level3Passwords = { "NASA", "imsocool", "engineer", "scientist" };
     enum Screen { MainMenu, Password, Win };
     Screen currentScreen;
-    string l1pw = "dog";
-    string l2pw = "cat";
+    string password;
 
     // Use this for initialization
     void Start () {
+
         var greeting = "long ass greeting";
         ShowMainMenu();
     }
@@ -55,9 +59,12 @@ public class Hacker : MonoBehaviour {
     {
         if(level == 1)
         {
-            if(l1pw == input)
+            password = level1Passwords[Random.Range(0, level1Passwords.Length)];
+            Terminal.WriteLine(password.Anagram());
+            if(password == input)
             {
-                Terminal.WriteLine("yes");
+                DisplayWinScreen();
+
             }
             else
             {
@@ -66,10 +73,23 @@ public class Hacker : MonoBehaviour {
 
         }else if(level == 2)
         {
-
-            if(l2pw == input)
+            password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+            Terminal.WriteLine(password.Anagram());
+            if (password == input)
             {
-                Terminal.WriteLine("YES");
+                DisplayWinScreen();
+            }
+            else
+            {
+                Terminal.WriteLine("try again");
+            }
+        }else if(level == 3)
+        {
+            password = level3Passwords[Random.Range(0, level3Passwords.Length)];
+            Terminal.WriteLine(password.Anagram());
+            if (password == input)
+            {
+                DisplayWinScreen();
             }
             else
             {
@@ -78,17 +98,45 @@ public class Hacker : MonoBehaviour {
         }
     }
 
+    void DisplayWinScreen()
+    {
+
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+    void ShowLevelReward()
+    {
+        switch (level)
+        {
+            case 1:
+                Terminal.WriteLine("havea book");
+                Terminal.WriteLine(@"
+///
+(___________(
+ (___________(
+  (___________(
+    
+***
+;;;
+");
+                break;
+            case 2:
+                Terminal.WriteLine("you got the prison eky");
+                break;
+            default:
+                Debug.Log("error nivalid level");
+                break;
+        }
+    }
+
     private void RunMainMenu(string input)
     {
-        if (input == "2")
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
+        if (isValidLevelNumber)
         {
-            level = 2;
-            StartGame();
-        }
-        else if (input == "1")
-        {
-
-            level = 1;
+            level = int.Parse(input);
             StartGame();
         }
         else
@@ -100,7 +148,9 @@ public class Hacker : MonoBehaviour {
     void StartGame()
     {
         currentScreen = Screen.Password;
-        Terminal.WriteLine("you have chosen " + level);
+        Terminal.ClearScreen();
         Terminal.WriteLine("please enter your password");
+
+
     }
 }
